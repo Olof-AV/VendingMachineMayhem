@@ -11,10 +11,6 @@ Shader "Hidden/CA_Shader"
         LOD 200
 
         //Blend state
-        /*Cull Back
-        ZWrite Off
-        ColorMask RGB
-        Blend SrcAlpha OneMinusSrcAlpha*/
         ColorMask RGB
         ZWrite Off
         Cull Off
