@@ -11,10 +11,6 @@ Shader "Hidden/Outline"
         LOD 200
 
         //Blend state
-        /*Cull Back
-        ZWrite Off
-        ColorMask RGB
-        Blend SrcAlpha OneMinusSrcAlpha*/
         ColorMask RGB
         ZWrite Off
         Cull Off
@@ -145,7 +141,7 @@ Shader "Hidden/Outline"
                 {
                     const float3 worldNormal = SAMPLE_TEXTURE2D(_CustomCamNormals, sampler_CustomCamNormals, input.uv).xyz * 2.0f - 1.0f;
                     float total = 4.0f;
-                    total -= dot(worldNormal, SAMPLE_TEXTURE2D(_CustomCamNormals, sampler_CustomCamNormals, input.uv + offset.xz).xyz * 2.0f - 1.0f).xxxx; //Right
+                    total -= dot(worldNormal, SAMPLE_TEXTURE2D(_CustomCamNormals, sampler_CustomCamNormals, input.uv + offset.xz).xyz * 2.0f - 1.0f); //Right
                     total -= dot(worldNormal, SAMPLE_TEXTURE2D(_CustomCamNormals, sampler_CustomCamNormals, input.uv + offset.zy).xyz * 2.0f - 1.0f); //Top
                     total -= dot(worldNormal, SAMPLE_TEXTURE2D(_CustomCamNormals, sampler_CustomCamNormals, input.uv - offset.xz).xyz * 2.0f - 1.0f); //Left
                     total -= dot(worldNormal, SAMPLE_TEXTURE2D(_CustomCamNormals, sampler_CustomCamNormals, input.uv - offset.zy).xyz * 2.0f - 1.0f); //Bottom
