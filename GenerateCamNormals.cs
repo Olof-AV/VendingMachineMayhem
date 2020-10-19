@@ -19,6 +19,7 @@ public sealed class GenerateCamNormals : ScriptableRendererFeature
         private Material material;
         private string profilerTag;
         private RenderTargetHandle tempRT;
+        private RenderTargetHandle tempDepthRT;
 
         //Custom setup used by AddRenderPasses
         public void Setup()
@@ -28,7 +29,9 @@ public sealed class GenerateCamNormals : ScriptableRendererFeature
 
             //Setup custom RT
             tempRT = new RenderTargetHandle();
+            tempDepthRT = new RenderTargetHandle();
             tempRT.Init("_CustomCamNormals");
+            tempDepthRT.Init("_CustomCamNormalsDepth");
         }
 
         //Configure stuff like render target/clearing
@@ -39,8 +42,17 @@ public sealed class GenerateCamNormals : ScriptableRendererFeature
 
             //Get temp RT, setup pass to render to it/clear
             _cmd.GetTemporaryRT(tempRT.id, _cameraTextureDescriptor, FilterMode.Point);
-            _cameraTextureDescriptor.depthBufferBits = 0;
-            ConfigureTarget(tempRT.id);
+
+            //Configure depth
+            {
+                RenderTextureDescriptor _cache = _cameraTextureDescriptor;
+                RenderTextureDescriptor _temp = new RenderTextureDescriptor(_cache.width, _cache.height, _cache.colorFormat, _cache.depthBufferBits, _cache.mipCount);
+                _temp.depthBufferBits = 24;
+                _temp.colorFormat = RenderTextureFormat.Depth;
+                _cmd.GetTemporaryRT(tempDepthRT.id, _temp);
+            }
+
+            ConfigureTarget(tempRT.id, tempDepthRT.id);
             ConfigureClear(ClearFlag.All, Color.black);
         }
 
